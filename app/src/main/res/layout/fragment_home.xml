@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark">
+    android:background="@color/colorPrimaryDark"
+    tools:context=".MainActivity">
 
     <TextView
         android:id="@+id/tv1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/_20ssp"
+        android:textSize="@dimen/_15sdp"
         android:text="@string/notes"
         android:paddingStart="@dimen/_10ssp"
         android:paddingTop="@dimen/_10ssp"
@@ -72,6 +73,7 @@
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabBtnCreateNote"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_add"
