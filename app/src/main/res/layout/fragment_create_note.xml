@@ -81,6 +81,7 @@
         android:orientation="horizontal">
 
         <View
+            android:id="@+id/colorView"
             android:layout_width="@dimen/_5sdp"
             android:layout_height="match_parent"
             android:layout_marginStart="@dimen/_5sdp"
@@ -118,6 +119,22 @@
         android:fontFamily="@font/manrope_regular"
         android:hint="@string/notes_desc"></EditText>
 
+    <FrameLayout
+        android:layout_width="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="@dimen/_40sdp">
+
+        <ImageView
+            android:id="@+id/imgMore"
+            android:layout_gravity="center"
+            android:layout_width="@dimen/_24sdp"
+            android:layout_height="@dimen/_24sdp"
+            android:src="@drawable/ic_more"
+            app:tint="@color/ColorWhite"></ImageView>
+
+    </FrameLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
