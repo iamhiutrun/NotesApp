@@ -1,5 +1,6 @@
 package hiutrun.example.notesapp.adapter
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +24,12 @@ class NotesAdapter(val arrList: List<Notes>): RecyclerView.Adapter<NotesAdapter.
         holder.itemView.tvTitle.text = arrList[position].title;
         holder.itemView.tvDesc.text = arrList[position].noteText;
         holder.itemView.tvDateTime.text = arrList[position].dateTime;
+
+        if(arrList[position].color!=null){
+            holder.itemView.cardView.setBackgroundColor(Color.parseColor(arrList[position].color))
+        }else{
+            holder.itemView.cardView.setCardBackgroundColor(Color.parseColor(R.color.ColorLightBlack.toString()))
+        }
     }
 
     override fun getItemCount(): Int {
