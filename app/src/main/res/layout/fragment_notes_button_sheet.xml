@@ -75,7 +75,7 @@
                 android:background="@drawable/note_color_1"></View>
 
             <ImageView
-                android:id="@+id/imgNote"
+                android:id="@+id/imgNote1"
                 android:layout_width="@dimen/_16sdp"
                 android:layout_height="@dimen/_16sdp"
                 android:layout_gravity="center"
@@ -115,7 +115,7 @@
             <ImageView
                 android:id="@+id/imgNote3"
                 android:layout_width="@dimen/_16sdp"
-                android:layout_height="@dimen/_16sdp"
+                android:layout_height="12dp"
                 android:layout_gravity="center"
                 app:tint="@color/ColorWhite"></ImageView>
         </FrameLayout>
