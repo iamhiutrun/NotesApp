@@ -25,6 +25,7 @@
                 android:text="@string/notes"
                 android:paddingStart="@dimen/_10ssp"
                 android:paddingTop="@dimen/_10ssp"
+                android:paddingEnd="@dimen/_2sdp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 android:fontFamily="@font/manrope_bold"
