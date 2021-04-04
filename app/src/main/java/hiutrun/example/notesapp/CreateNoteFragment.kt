@@ -17,10 +17,11 @@ import hiutrun.example.notesapp.entities.Notes
 import hiutrun.example.notesapp.util.NoteBottomSheetFragment
 import kotlinx.android.synthetic.main.fragment_create_note.*
 import kotlinx.coroutines.launch
+import pub.devrel.easypermissions.EasyPermissions
 import java.text.SimpleDateFormat
 import java.util.*
 
-class CreateNoteFragment : BaseFragment() {
+class CreateNoteFragment : BaseFragment(), EasyPermissions.PermissionCallbacks, EasyPermissions.RationaleCallbacks {
     var selectedColor = "#171C26"
     var currentDate : String? = null
 
@@ -120,7 +121,7 @@ class CreateNoteFragment : BaseFragment() {
 
     private val broadcastReceiver : BroadcastReceiver = object : BroadcastReceiver(){
         override fun onReceive(context: Context?, intent: Intent?) {
-            var actionColor = intent!!.getStringExtra("actionColor")
+            var actionColor = intent!!.getStringExtra("action")
             when(actionColor!!){
 
                 "Blue" -> {
@@ -158,6 +159,10 @@ class CreateNoteFragment : BaseFragment() {
                     colorView.setBackgroundColor(Color.parseColor(selectedColor))
                 }
 
+                "Image" ->{
+
+                }
+
                 else ->{
                     var selectedColor = intent.getStringExtra("selectedColor")!!
                     colorView.setBackgroundColor(Color.parseColor(selectedColor))
@@ -174,5 +179,21 @@ class CreateNoteFragment : BaseFragment() {
         )
 
         super.onDestroy()
+    }
+
+    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onRationaleAccepted(requestCode: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onRationaleDenied(requestCode: Int) {
+        TODO("Not yet implemented")
     }
 }
