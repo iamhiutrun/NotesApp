@@ -1,11 +1,14 @@
 package hiutrun.example.notesapp
 
+import android.app.Activity.RESULT_OK
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
+import android.provider.MediaStore
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,13 +20,18 @@ import hiutrun.example.notesapp.entities.Notes
 import hiutrun.example.notesapp.util.NoteBottomSheetFragment
 import kotlinx.android.synthetic.main.fragment_create_note.*
 import kotlinx.coroutines.launch
+import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.jar.Manifest
 
 class CreateNoteFragment : BaseFragment(), EasyPermissions.PermissionCallbacks, EasyPermissions.RationaleCallbacks {
     var selectedColor = "#171C26"
     var currentDate : String? = null
+    private var READ_STORAGE_PERM  = 123
+    private var REQUEST_CODE_IMAGE  = 456
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -160,7 +168,7 @@ class CreateNoteFragment : BaseFragment(), EasyPermissions.PermissionCallbacks, 
                 }
 
                 "Image" ->{
-
+                    readStorageTask()
                 }
 
                 else ->{
@@ -181,12 +189,69 @@ class CreateNoteFragment : BaseFragment(), EasyPermissions.PermissionCallbacks, 
         super.onDestroy()
     }
 
+
+    private fun hasReadStoragePerm():Boolean{
+        return EasyPermissions.hasPermissions(requireContext(),android.Manifest.permission.READ_EXTERNAL_STORAGE)
+    }
+
+    private fun hasWriteStoragePerm():Boolean{
+        return EasyPermissions.hasPermissions(requireContext(),android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    }
+
+    private fun readStorageTask(){
+        if (hasReadStoragePerm()){
+
+            pickImageFromGallery()
+        }else{
+            EasyPermissions.requestPermissions(
+                    requireActivity(),
+                    getString(R.string.storage_permission_text),
+                    READ_STORAGE_PERM,
+                    android.Manifest.permission.READ_EXTERNAL_STORAGE
+            )
+        }
+    }
+
+    private fun pickImageFromGallery(){
+        var intent = Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        if(intent.resolveActivity(requireActivity().packageManager)!=null){
+            startActivityForResult(intent,REQUEST_CODE_IMAGE)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode==REQUEST_CODE_IMAGE && resultCode == RESULT_OK){
+            if(data!=null){
+                var selectedImageUrl = data.data
+                if(selectedImageUrl!=null){
+                    try {
+                        var inputStream = requireActivity().contentResolver.openInputStream(selectedImageUrl)
+                        var bitmap = BitmapFactory.decodeStream(inputStream)
+                        imgNote.setImageBitmap(bitmap)
+                        imgNote.visibility = View.VISIBLE
+                    }catch (e:Exception){
+                        Toast.makeText(requireContext(),e.message,Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        EasyPermissions.onRequestPermissionsResult(requestCode,permissions,grantResults,requireActivity())
+    }
+
     override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
-        TODO("Not yet implemented")
+
     }
 
     override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
-        TODO("Not yet implemented")
+        if (EasyPermissions.somePermissionPermanentlyDenied(requireActivity(),perms)){
+            AppSettingsDialog.Builder(requireActivity()).build().show()
+        }
     }
 
     override fun onRationaleAccepted(requestCode: Int) {
