@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import androidx.fragment.app.Fragment
@@ -32,6 +33,7 @@ class CreateNoteFragment : BaseFragment(), EasyPermissions.PermissionCallbacks, 
     var currentDate : String? = null
     private var READ_STORAGE_PERM  = 123
     private var REQUEST_CODE_IMAGE  = 456
+    private var selectedImagePath = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,12 +106,15 @@ class CreateNoteFragment : BaseFragment(), EasyPermissions.PermissionCallbacks, 
                 notes.noteText = etNoteDesc.text.toString()
                 notes.dateTime = currentDate
                 notes.color = selectedColor
+                notes.img = selectedImagePath
 
                 context?.let {
                     NotesDatabase.getDatabase(it).noteDao().insertNotes(notes)
                     etNoteDesc.setText("")
                     etNoteSubTitle.setText("")
                     etNoteTitle.setText("")
+                    imgNote.visibility = View.GONE
+                    requireActivity().supportFragmentManager.popBackStack()
                 }
 
             }
@@ -219,6 +224,20 @@ class CreateNoteFragment : BaseFragment(), EasyPermissions.PermissionCallbacks, 
         }
     }
 
+    private fun getPathFromUri(contentUri:Uri): String? {
+        var filePath:String?=null
+        var cursor = requireActivity().contentResolver.query(contentUri,null,null,null,null)
+        if(cursor==null){
+            filePath = contentUri.path
+        }else{
+            cursor.moveToFirst()
+            var index = cursor.getColumnIndex("_data")
+            filePath = cursor.getString(index)
+            cursor.close()
+        }
+        return filePath
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode==REQUEST_CODE_IMAGE && resultCode == RESULT_OK){
@@ -230,6 +249,8 @@ class CreateNoteFragment : BaseFragment(), EasyPermissions.PermissionCallbacks, 
                         var bitmap = BitmapFactory.decodeStream(inputStream)
                         imgNote.setImageBitmap(bitmap)
                         imgNote.visibility = View.VISIBLE
+
+                        selectedImagePath = getPathFromUri(selectedImageUrl)!!
                     }catch (e:Exception){
                         Toast.makeText(requireContext(),e.message,Toast.LENGTH_SHORT).show()
                     }
