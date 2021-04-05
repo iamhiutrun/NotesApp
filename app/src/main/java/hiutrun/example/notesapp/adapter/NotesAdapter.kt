@@ -1,5 +1,6 @@
 package hiutrun.example.notesapp.adapter
 
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -29,6 +30,13 @@ class NotesAdapter(val arrList: List<Notes>): RecyclerView.Adapter<NotesAdapter.
             holder.itemView.cardView.setBackgroundColor(Color.parseColor(arrList[position].color))
         }else{
             holder.itemView.cardView.setCardBackgroundColor(Color.parseColor(R.color.ColorLightBlack.toString()))
+        }
+
+        if(arrList[position].img !=null){
+            holder.itemView.imgNote.setImageBitmap(BitmapFactory.decodeFile(arrList[position].img))
+            holder.itemView.imgNote.visibility = View.VISIBLE
+        }else{
+            holder.itemView.imgNote.visibility = View.GONE
         }
     }
 
