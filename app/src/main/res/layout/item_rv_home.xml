@@ -29,6 +29,8 @@
                 app:riv_corner_radius_top_right="@dimen/_10sdp"
                 ></com.makeramen.roundedimageview.RoundedImageView>
 
+
+
             <TextView
                 android:id="@+id/tvTitle"
                 android:layout_width="match_parent"
@@ -43,6 +45,23 @@
                 android:fontFamily="@font/manrope_bold"
                 android:textColor="@color/ColorWhite"></TextView>
 
+            <TextView
+                android:id="@+id/tvWebLink"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:ellipsize="end"
+                android:fontFamily="@font/manrope_bold"
+                android:padding="@dimen/_10sdp"
+                android:textColor="@color/ColorGrey"
+                android:textColorHint="@color/ColorGrey"
+                android:textSize="@dimen/_12sdp"
+                android:autoLink="web"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layoutWebUrl"></TextView>
             <TextView
                 android:id="@+id/tvDesc"
                 android:layout_width="match_parent"

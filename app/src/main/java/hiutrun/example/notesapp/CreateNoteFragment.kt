@@ -10,6 +10,7 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Patterns
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -27,6 +28,7 @@ import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.jar.Manifest
+import java.util.regex.Pattern
 
 class CreateNoteFragment : BaseFragment(), EasyPermissions.PermissionCallbacks, EasyPermissions.RationaleCallbacks {
     var selectedColor = "#171C26"
@@ -34,6 +36,7 @@ class CreateNoteFragment : BaseFragment(), EasyPermissions.PermissionCallbacks, 
     private var READ_STORAGE_PERM  = 123
     private var REQUEST_CODE_IMAGE  = 456
     private var selectedImagePath = ""
+    private var webLink = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,16 +89,33 @@ class CreateNoteFragment : BaseFragment(), EasyPermissions.PermissionCallbacks, 
             var noteBottomSheetFragment = NoteBottomSheetFragment.newInstance()
             noteBottomSheetFragment.show(requireActivity().supportFragmentManager,"Note Bottom Sheet Fragment")
         }
+
+        btnOk.setOnClickListener {
+            if(!etWebLink.text.toString().trim().isNullOrEmpty()){
+                checkWebUrl()
+            }else{
+                Toast.makeText(requireContext(),"Url is Required", Toast.LENGTH_SHORT).show()
+            }
+
+            tvWebLink.setOnClickListener{
+                var intent = Intent(Intent.ACTION_VIEW,Uri.parse(etWebLink.text.toString()))
+                startActivity(intent)
+            }
+        }
+
+        btnCancel.setOnClickListener {
+            layoutWebUrl.visibility = View.GONE
+        }
     }
 
     private fun saveNote(){
         if(etNoteTitle.text.isNullOrEmpty()){
             Toast.makeText(context,"Note Title is Required", Toast.LENGTH_SHORT).show()
         }
-        if(etNoteSubTitle.text.isNullOrEmpty()){
+        else if(etNoteSubTitle.text.isNullOrEmpty()){
             Toast.makeText(context,"Note Sub Title is Required", Toast.LENGTH_SHORT).show()
         }
-        if(etNoteDesc.text.isNullOrEmpty()){
+        else if(etNoteDesc.text.isNullOrEmpty()){
             Toast.makeText(context,"Note Description is Required", Toast.LENGTH_SHORT).show()
         }else{
 
@@ -107,6 +127,7 @@ class CreateNoteFragment : BaseFragment(), EasyPermissions.PermissionCallbacks, 
                 notes.dateTime = currentDate
                 notes.color = selectedColor
                 notes.img = selectedImagePath
+                notes.webLink = webLink
 
                 context?.let {
                     NotesDatabase.getDatabase(it).noteDao().insertNotes(notes)
@@ -114,6 +135,7 @@ class CreateNoteFragment : BaseFragment(), EasyPermissions.PermissionCallbacks, 
                     etNoteSubTitle.setText("")
                     etNoteTitle.setText("")
                     imgNote.visibility = View.GONE
+                    tvWebLink.visibility = View.GONE
                     requireActivity().supportFragmentManager.popBackStack()
                 }
 
@@ -122,14 +144,16 @@ class CreateNoteFragment : BaseFragment(), EasyPermissions.PermissionCallbacks, 
         }
     }
 
-    private fun replaceFragment(fragment: Fragment, isTransition : Boolean) {
-        val fragmentTransition = activity!!.supportFragmentManager.beginTransaction()
-
-        if(isTransition){
-            fragmentTransition.setCustomAnimations(android.R.anim.slide_out_right, android.R.anim.slide_in_left)
+    private fun checkWebUrl(){
+        if(Patterns.WEB_URL.matcher(etWebLink.text.toString()).matches()){
+            layoutWebUrl.visibility = View.GONE
+            etWebLink.isEnabled = false
+            webLink = etWebLink.text.toString()
+            tvWebLink.visibility = View.VISIBLE
+            tvWebLink.text = webLink
+        }else{
+            Toast.makeText(requireContext(),"Url is not valid", Toast.LENGTH_SHORT).show()
         }
-        fragmentTransition.replace(R.id.frame_layout,fragment).addToBackStack(fragment.javaClass.simpleName)
-        fragmentTransition.commit()
     }
 
     private val broadcastReceiver : BroadcastReceiver = object : BroadcastReceiver(){
@@ -174,9 +198,18 @@ class CreateNoteFragment : BaseFragment(), EasyPermissions.PermissionCallbacks, 
 
                 "Image" ->{
                     readStorageTask()
+                    layoutWebUrl.visibility = View.GONE
+                }
+
+                "WebUrl" ->{
+                    // show web url layout
+                    layoutWebUrl.visibility = View.VISIBLE
+
                 }
 
                 else ->{
+                    imgNote.visibility = View.GONE
+                    layoutWebUrl.visibility = View.GONE
                     var selectedColor = intent.getStringExtra("selectedColor")!!
                     colorView.setBackgroundColor(Color.parseColor(selectedColor))
                 }
