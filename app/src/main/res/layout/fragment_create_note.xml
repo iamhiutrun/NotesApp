@@ -113,6 +113,73 @@
         android:layout_marginEnd="@dimen/_10sdp"
         app:layout_constraintTop_toBottomOf="@id/l1"></ImageView>
 
+    <LinearLayout
+        android:id="@+id/layoutWebUrl"
+        android:background="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:padding="@dimen/_10sdp"
+        android:layout_margin="@dimen/_10sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imgNote">
+
+        <EditText
+            android:id="@+id/etWebLink"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:fontFamily="@font/manrope_regular"
+            android:hint="@string/web_url"
+            android:inputType="textMultiLine"
+            android:padding="@dimen/_10sdp"
+            android:textColor="@color/ColorWhite"
+            android:textColorHint="@color/ColorGrey"
+            android:textSize="@dimen/_12sdp"
+            ></EditText>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:gravity="end">
+
+
+            <Button
+                android:id="@+id/btnCancel"
+                android:fontFamily="@font/manrope_bold"
+                android:background="@color/colorAccent"
+                android:text="@string/cancel"
+                android:textAllCaps="false"
+                android:textSize="@dimen/_12ssp"
+                android:textColor="@color/ColorWhite"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_30sdp"></Button>
+
+
+            <Button
+                android:id="@+id/btnOk"
+                android:fontFamily="@font/manrope_bold"
+                android:background="@color/colorAccent"
+                android:textSize="@dimen/_12ssp"
+                android:text="@string/ok"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:textAllCaps="false"
+                android:textColor="@color/ColorWhite"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_30sdp"></Button>
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
     <EditText
         android:id="@+id/etNoteDesc"
         android:layout_width="match_parent"
@@ -128,7 +195,9 @@
         android:textSize="@dimen/_12sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imgNote"></EditText>
+        app:layout_constraintTop_toBottomOf="@id/layoutWebUrl"></EditText>
+
+
 
     <FrameLayout
         android:layout_width="match_parent"
