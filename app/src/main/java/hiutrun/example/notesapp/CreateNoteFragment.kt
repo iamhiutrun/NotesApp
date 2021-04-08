@@ -21,6 +21,7 @@ import hiutrun.example.notesapp.database.NotesDatabase
 import hiutrun.example.notesapp.entities.Notes
 import hiutrun.example.notesapp.util.NoteBottomSheetFragment
 import kotlinx.android.synthetic.main.fragment_create_note.*
+import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.launch
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
@@ -37,12 +38,14 @@ class CreateNoteFragment : BaseFragment(), EasyPermissions.PermissionCallbacks, 
     private var REQUEST_CODE_IMAGE  = 456
     private var selectedImagePath = ""
     private var webLink = ""
+    private var noteId = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
 
-        }
+        noteId = requireArguments().getInt("noteId",-1)
+
+
     }
 
     override fun onCreateView(
@@ -65,6 +68,37 @@ class CreateNoteFragment : BaseFragment(), EasyPermissions.PermissionCallbacks, 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if(noteId!= -1){
+
+            launch {
+                context?.let {
+                    var notes = NotesDatabase.getDatabase(it).noteDao().getSpecificNote(noteId)
+                    colorView.setBackgroundColor(Color.parseColor(notes.color))
+                    etNoteDesc.setText(notes.noteText)
+                    etNoteSubTitle.setText(notes.subTile)
+                    etNoteTitle.setText(notes.title)
+
+                    if(notes.img !=""){
+                        imgNote.setImageBitmap(BitmapFactory.decodeFile(notes.img))
+                        imgNote.visibility = View.VISIBLE
+                    }else{
+                        imgNote.visibility = View.GONE
+                    }
+
+                    if(notes.webLink !=""){
+                        tvWebLink.text = notes.webLink
+                        tvWebLink.visibility = View.VISIBLE
+                    }else{
+                        tvWebLink.visibility = View.GONE
+                    }
+                    imgNote.visibility = View.GONE
+                    tvWebLink.visibility = View.GONE
+                }
+            }
+
+        }
+
 
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(
                 broadcastReceiver, IntentFilter("bottom_sheet_action")

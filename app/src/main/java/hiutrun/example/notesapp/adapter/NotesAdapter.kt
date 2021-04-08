@@ -10,7 +10,10 @@ import hiutrun.example.notesapp.R
 import hiutrun.example.notesapp.entities.Notes
 import kotlinx.android.synthetic.main.item_rv_home.view.*
 
-class NotesAdapter(val arrList: List<Notes>): RecyclerView.Adapter<NotesAdapter.NotesViewHolder>() {
+class NotesAdapter(): RecyclerView.Adapter<NotesAdapter.NotesViewHolder>() {
+    private var arrList = ArrayList<Notes>()
+    var listener:OnItemClickListener?=null
+
     inner class NotesViewHolder(itemView:View):RecyclerView.ViewHolder(itemView) {
 
     }
@@ -19,6 +22,19 @@ class NotesAdapter(val arrList: List<Notes>): RecyclerView.Adapter<NotesAdapter.
         return NotesViewHolder(
                 LayoutInflater.from(parent.context).inflate(R.layout.item_rv_home,parent,false)
         )
+    }
+
+    override fun getItemCount(): Int {
+        return arrList.size
+    }
+
+
+    fun setData(arrNotesList: List<Notes>){
+        arrList = arrNotesList as ArrayList<Notes>
+    }
+
+    fun setOnClickListener(listener1: OnItemClickListener){
+        listener = listener1
     }
 
     override fun onBindViewHolder(holder: NotesViewHolder, position: Int) {
@@ -35,6 +51,7 @@ class NotesAdapter(val arrList: List<Notes>): RecyclerView.Adapter<NotesAdapter.
         if(arrList[position].img !=null){
             holder.itemView.imgNote.setImageBitmap(BitmapFactory.decodeFile(arrList[position].img))
             holder.itemView.imgNote.visibility = View.VISIBLE
+
         }else{
             holder.itemView.imgNote.visibility = View.GONE
         }
@@ -45,9 +62,15 @@ class NotesAdapter(val arrList: List<Notes>): RecyclerView.Adapter<NotesAdapter.
         }else{
             holder.itemView.tvWebLink.visibility = View.GONE
         }
+
+        holder.itemView.cardView.setOnClickListener {
+            arrList[position].id?.let { it1 -> listener!!.onClicked(it1) }
+        }
     }
 
-    override fun getItemCount(): Int {
-        return arrList.size
+    interface OnItemClickListener {
+        fun onClicked(notesId:Int)
     }
+
+
 }
