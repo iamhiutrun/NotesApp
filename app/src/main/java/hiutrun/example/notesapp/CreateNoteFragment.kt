@@ -78,7 +78,8 @@ class CreateNoteFragment : BaseFragment(), EasyPermissions.PermissionCallbacks, 
                     etNoteDesc.setText(notes.noteText)
                     etNoteSubTitle.setText(notes.subTile)
                     etNoteTitle.setText(notes.title)
-
+                    imgNote.visibility = View.GONE
+                    tvWebLink.visibility = View.GONE
                     if(notes.img !=""){
                         imgNote.setImageBitmap(BitmapFactory.decodeFile(notes.img))
                         imgNote.visibility = View.VISIBLE
@@ -92,8 +93,7 @@ class CreateNoteFragment : BaseFragment(), EasyPermissions.PermissionCallbacks, 
                     }else{
                         tvWebLink.visibility = View.GONE
                     }
-                    imgNote.visibility = View.GONE
-                    tvWebLink.visibility = View.GONE
+
                 }
             }
 
