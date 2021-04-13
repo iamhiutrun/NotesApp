@@ -21,7 +21,11 @@ import hiutrun.example.notesapp.database.NotesDatabase
 import hiutrun.example.notesapp.entities.Notes
 import hiutrun.example.notesapp.util.NoteBottomSheetFragment
 import kotlinx.android.synthetic.main.fragment_create_note.*
+import kotlinx.android.synthetic.main.fragment_create_note.imgMore
+import kotlinx.android.synthetic.main.fragment_create_note.layoutImage
+import kotlinx.android.synthetic.main.fragment_create_note.layoutWebUrl
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_notes_bottom_sheet.*
 import kotlinx.coroutines.launch
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
@@ -61,7 +65,6 @@ class CreateNoteFragment : BaseFragment(), EasyPermissions.PermissionCallbacks, 
         fun newInstance() =
             CreateNoteFragment().apply {
                 arguments = Bundle().apply {
-
                 }
             }
     }
@@ -133,7 +136,7 @@ class CreateNoteFragment : BaseFragment(), EasyPermissions.PermissionCallbacks, 
         }
 
         imgMore.setOnClickListener {
-            var noteBottomSheetFragment = NoteBottomSheetFragment.newInstance()
+            var noteBottomSheetFragment = NoteBottomSheetFragment.newInstance(noteId)
             noteBottomSheetFragment.show(requireActivity().supportFragmentManager,"Note Bottom Sheet Fragment")
         }
 
@@ -237,6 +240,15 @@ class CreateNoteFragment : BaseFragment(), EasyPermissions.PermissionCallbacks, 
         }
     }
 
+    private fun deleteNote(){
+        launch {
+            context?.let {
+                NotesDatabase.getDatabase(it).noteDao().deleteSpecificNote(noteId)
+                requireActivity().supportFragmentManager.popBackStack()
+            }
+        }
+    }
+
     private fun checkWebUrl(){
         if(Patterns.WEB_URL.matcher(etWebLink.text.toString()).matches()){
             layoutWebUrl.visibility = View.GONE
@@ -297,7 +309,11 @@ class CreateNoteFragment : BaseFragment(), EasyPermissions.PermissionCallbacks, 
                 "WebUrl" ->{
                     // show web url layout
                     layoutWebUrl.visibility = View.VISIBLE
+                }
 
+                "DeleteNote" ->{
+                    // delete note
+                    deleteNote()
                 }
 
                 else ->{

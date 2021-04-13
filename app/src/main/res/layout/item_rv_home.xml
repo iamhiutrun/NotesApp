@@ -40,8 +40,6 @@
                 android:paddingStart="@dimen/_10ssp"
                 android:paddingTop="@dimen/_10ssp"
                 android:paddingEnd="@dimen/_2sdp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 android:fontFamily="@font/manrope_bold"
                 android:textColor="@color/ColorWhite"></TextView>
 
@@ -49,11 +47,10 @@
                 android:id="@+id/tvWebLink"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:layout_marginBottom="@dimen/_5sdp"
                 android:ellipsize="end"
                 android:fontFamily="@font/manrope_bold"
-                android:padding="@dimen/_10sdp"
+                android:paddingTop="@dimen/_5sdp"
+                android:paddingStart="@dimen/_10sdp"
                 android:textColor="@color/ColorGrey"
                 android:textColorHint="@color/ColorGrey"
                 android:textSize="@dimen/_12sdp"
