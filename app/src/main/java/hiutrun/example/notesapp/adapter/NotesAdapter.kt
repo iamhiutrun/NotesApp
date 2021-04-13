@@ -56,7 +56,7 @@ class NotesAdapter(): RecyclerView.Adapter<NotesAdapter.NotesViewHolder>() {
             holder.itemView.imgNote.visibility = View.GONE
         }
 
-        if(arrList[position].webLink !=null){
+        if(arrList[position].webLink !=""){
             holder.itemView.tvWebLink.text = arrList[position].webLink
             holder.itemView.tvWebLink.visibility = View.VISIBLE
         }else{

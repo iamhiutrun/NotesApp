@@ -78,20 +78,29 @@ class CreateNoteFragment : BaseFragment(), EasyPermissions.PermissionCallbacks, 
                     etNoteDesc.setText(notes.noteText)
                     etNoteSubTitle.setText(notes.subTile)
                     etNoteTitle.setText(notes.title)
-                    imgNote.visibility = View.GONE
-                    tvWebLink.visibility = View.GONE
+
                     if(notes.img !=""){
+                        selectedImagePath = notes.img!!
                         imgNote.setImageBitmap(BitmapFactory.decodeFile(notes.img))
+                        layoutImage.visibility = View.VISIBLE
                         imgNote.visibility = View.VISIBLE
+                        imgDelete.visibility = View.VISIBLE
                     }else{
                         imgNote.visibility = View.GONE
+                        imgDelete.visibility = View.GONE
+                        layoutImage.visibility = View.GONE
+
                     }
 
                     if(notes.webLink !=""){
+                        webLink = notes.webLink.toString()
                         tvWebLink.text = notes.webLink
-                        tvWebLink.visibility = View.VISIBLE
+                        layoutWebUrl.visibility = View.VISIBLE
+                        imgUrlDelete.visibility = View.VISIBLE
+                        etWebLink.setText(notes.webLink)
                     }else{
-                        tvWebLink.visibility = View.GONE
+                        imgUrlDelete.visibility = View.GONE
+                        layoutWebUrl.visibility = View.GONE
                     }
 
                 }
@@ -111,8 +120,12 @@ class CreateNoteFragment : BaseFragment(), EasyPermissions.PermissionCallbacks, 
         colorView.setBackgroundColor(Color.parseColor(selectedColor))
 
         imgDone.setOnClickListener{
-            //saveNote
-            saveNote()
+
+            if(noteId!=-1){
+                updateNote()
+            }else{
+                saveNote()
+            }
         }
 
         imgBack.setOnClickListener {
@@ -138,10 +151,55 @@ class CreateNoteFragment : BaseFragment(), EasyPermissions.PermissionCallbacks, 
         }
 
         btnCancel.setOnClickListener {
+            if(noteId!=-1){
+                tvWebLink.visibility = View.VISIBLE
+                layoutWebUrl.visibility = View.GONE
+            }else{
+                layoutWebUrl.visibility = View.GONE
+            }
+            layoutWebUrl.visibility = View.GONE
+        }
+
+        imgDelete.setOnClickListener {
+            layoutImage.visibility = View.GONE
+            selectedImagePath = ""
+        }
+
+        imgUrlDelete.setOnClickListener {
+            webLink = ""
+            imgUrlDelete.visibility = View.GONE
             layoutWebUrl.visibility = View.GONE
         }
     }
 
+
+    private fun updateNote(){
+        launch {
+
+            context?.let {
+                val notes = NotesDatabase.getDatabase(it).noteDao().getSpecificNote(noteId)
+
+                notes.title = etNoteTitle.text.toString()
+                notes.subTile = etNoteSubTitle.text.toString()
+                notes.noteText = etNoteDesc.text.toString()
+                notes.dateTime = currentDate
+                notes.color = selectedColor
+                notes.img = selectedImagePath
+                notes.webLink = webLink
+
+
+                NotesDatabase.getDatabase(it).noteDao().updateNotes(notes)
+                etNoteDesc.setText("")
+                etNoteSubTitle.setText("")
+                etNoteTitle.setText("")
+                imgNote.visibility = View.GONE
+                layoutImage.visibility = View.GONE
+                tvWebLink.visibility = View.GONE
+                requireActivity().supportFragmentManager.popBackStack()
+            }
+
+        }
+    }
     private fun saveNote(){
         if(etNoteTitle.text.isNullOrEmpty()){
             Toast.makeText(context,"Note Title is Required", Toast.LENGTH_SHORT).show()
@@ -169,6 +227,7 @@ class CreateNoteFragment : BaseFragment(), EasyPermissions.PermissionCallbacks, 
                     etNoteSubTitle.setText("")
                     etNoteTitle.setText("")
                     imgNote.visibility = View.GONE
+                    layoutImage.visibility = View.GONE
                     tvWebLink.visibility = View.GONE
                     requireActivity().supportFragmentManager.popBackStack()
                 }
@@ -226,7 +285,7 @@ class CreateNoteFragment : BaseFragment(), EasyPermissions.PermissionCallbacks, 
                 }
 
                 "Black" -> {
-                    var selectedColor = intent.getStringExtra("selectedColor")!!
+                    selectedColor = intent.getStringExtra("selectedColor")!!
                     colorView.setBackgroundColor(Color.parseColor(selectedColor))
                 }
 
@@ -243,8 +302,9 @@ class CreateNoteFragment : BaseFragment(), EasyPermissions.PermissionCallbacks, 
 
                 else ->{
                     imgNote.visibility = View.GONE
+                    layoutImage.visibility = View.GONE
                     layoutWebUrl.visibility = View.GONE
-                    var selectedColor = intent.getStringExtra("selectedColor")!!
+                    selectedColor = intent.getStringExtra("selectedColor")!!
                     colorView.setBackgroundColor(Color.parseColor(selectedColor))
                 }
 
@@ -316,6 +376,7 @@ class CreateNoteFragment : BaseFragment(), EasyPermissions.PermissionCallbacks, 
                         var bitmap = BitmapFactory.decodeStream(inputStream)
                         imgNote.setImageBitmap(bitmap)
                         imgNote.visibility = View.VISIBLE
+                        layoutImage.visibility = View.VISIBLE
 
                         selectedImagePath = getPathFromUri(selectedImageUrl)!!
                     }catch (e:Exception){

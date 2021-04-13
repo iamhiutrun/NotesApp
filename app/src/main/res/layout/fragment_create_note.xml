@@ -105,15 +105,36 @@
             android:textSize="@dimen/_12sdp"></EditText>
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/imgNote"
+    <RelativeLayout
+        android:id="@+id/layoutImage"
+        app:layout_constraintTop_toBottomOf="@id/l1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:visibility="gone"
-        android:layout_marginStart="@dimen/_10sdp"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:layout_marginEnd="@dimen/_10sdp"
-        app:layout_constraintTop_toBottomOf="@id/l1"></ImageView>
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imgNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            ></ImageView>
+
+        <ImageView
+            android:id="@+id/imgDelete"
+            android:layout_width="@dimen/_24sdp"
+            android:layout_height="@dimen/_24sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:visibility="gone"
+            android:src="@drawable/ic_delete"></ImageView>
+
+    </RelativeLayout>
+
 
     <LinearLayout
         android:id="@+id/layoutWebUrl"
@@ -126,30 +147,44 @@
         android:layout_margin="@dimen/_10sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imgNote">
+        app:layout_constraintTop_toBottomOf="@id/layoutImage">
 
-        <EditText
-            android:id="@+id/etWebLink"
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@null"
-            android:layout_marginBottom="@dimen/_10sdp"
-            android:fontFamily="@font/manrope_regular"
-            android:hint="@string/web_url"
-            android:inputType="textMultiLine"
-            android:padding="@dimen/_10sdp"
-            android:text="http://"
-            android:textColor="@color/ColorWhite"
-            android:textColorHint="@color/ColorGrey"
-            android:textSize="@dimen/_12sdp"
-            ></EditText>
+            android:gravity= "center">
+
+            <EditText
+                android:id="@+id/etWebLink"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null"
+                android:fontFamily="@font/manrope_regular"
+                android:hint="@string/web_url"
+                android:inputType="textMultiLine"
+                android:padding="@dimen/_10sdp"
+                android:text="http://"
+                android:textColor="@color/ColorWhite"
+                android:textColorHint="@color/ColorGrey"
+                android:textSize="@dimen/_12ssp" />
+
+            <ImageView
+                android:id="@+id/imgUrlDelete"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
+                android:visibility="gone"
+                android:src="@drawable/ic_cancel"></ImageView>
+
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginEnd="@dimen/_10sdp"
-            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_10sdp"
             android:gravity="end">
 
 
@@ -183,6 +218,8 @@
 
     </LinearLayout>
 
+
+
     <TextView
         android:id="@+id/tvWebLink"
         android:layout_width="match_parent"
@@ -192,6 +229,7 @@
         android:layout_marginEnd="@dimen/_10sdp"
         android:layout_marginBottom="@dimen/_5sdp"
         android:ellipsize="end"
+        android:layout_weight="1"
         android:fontFamily="@font/manrope_bold"
         android:padding="@dimen/_10sdp"
         android:textColor="@color/ColorGrey"
