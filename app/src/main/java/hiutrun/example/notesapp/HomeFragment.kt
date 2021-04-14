@@ -5,12 +5,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import hiutrun.example.notesapp.adapter.NotesAdapter
 import hiutrun.example.notesapp.database.NotesDatabase
 import hiutrun.example.notesapp.entities.Notes
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.launch
+import java.util.*
+import kotlin.collections.ArrayList
 
 class HomeFragment : BaseFragment() {
 
@@ -51,6 +54,7 @@ class HomeFragment : BaseFragment() {
                 var notes = NotesDatabase.getDatabase(it).noteDao().getAllNotes()
                 notesAdapter!!.setData(notes)
                 recycler_view.adapter = notesAdapter
+                arrNotes = notes as ArrayList<Notes>
             }
         }
 
@@ -59,6 +63,25 @@ class HomeFragment : BaseFragment() {
         fabBtnCreateNote.setOnClickListener{
             replaceFragment(CreateNoteFragment.newInstance(),false)
         }
+
+        search_view.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                var tempArr = ArrayList<Notes>()
+                for (item in arrNotes){
+                    if(item.title!!.toLowerCase(Locale.getDefault()).contains(newText.toString())){
+                        tempArr.add(item)
+
+                    }
+                }
+                notesAdapter.setData(tempArr)
+                notesAdapter.notifyDataSetChanged()
+                return true
+            }
+        })
     }
 
     private val onClicked = object : NotesAdapter.OnItemClickListener{
